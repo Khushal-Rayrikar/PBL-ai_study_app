@@ -3,6 +3,7 @@ import Dashboard from './pages/Dashboard'
 import UploadPage from './pages/UploadPage'
 import RevisionPage from './pages/RevisionPage'
 import TheoryPage from './pages/TheoryPage'
+import FocusOnPage from './pages/FocusOnPage'
 import { Navigation } from './components/Navigation'
 import { Toaster } from './components/ui/toaster'
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/upload" component={UploadPage} />
           <Route path="/revision" component={RevisionPage} />
           <Route path="/theory" component={TheoryPage} />
+          <Route path="/focus" component={FocusOnPage} />
         </div>
         <Toaster />
       </div>

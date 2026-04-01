@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { BookOpen, RotateCw, Home, Upload } from "lucide-react";
+import { BookOpen, RotateCw, Home, Upload, AlertCircle } from "lucide-react";
 
 export function Navigation() {
   const [location] = useLocation();
@@ -8,6 +8,7 @@ export function Navigation() {
     { href: "/", label: "Dashboard", icon: Home },
     { href: "/revision", label: "Revision", icon: RotateCw },
     { href: "/theory", label: "Theory", icon: BookOpen },
+    { href: "/focus", label: "Focus On", icon: AlertCircle },
     { href: "/upload", label: "Upload", icon: Upload },
   ];
 

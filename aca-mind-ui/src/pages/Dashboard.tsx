@@ -3,6 +3,7 @@ import { useGetDashboard, useAuth } from "../lib/api";
 import { Card } from "../components/ui/card";
 import { Skeleton } from "../components/ui/skeleton";
 import { UnitWiseBreakdown } from "../components/UnitWiseBreakdown";
+import { TimeVsMarksChart } from "../components/TimeVsMarksChart";
 import {
   FileText, Trophy, Target, Sparkles, ArrowRight,
   PlayCircle, UploadCloud, Flame, Zap, Star, TrendingUp
@@ -297,6 +298,19 @@ export default function Dashboard() {
           ]}
         />
       </motion.div>
+
+      {/* Time vs Marks Analysis */}
+      <TimeVsMarksChart 
+        data={[
+          { date: "Mon", timeSpent: 45, marksObtained: 85 },
+          { date: "Tue", timeSpent: 60, marksObtained: 78 },
+          { date: "Wed", timeSpent: 50, marksObtained: 92 },
+          { date: "Thu", timeSpent: 75, marksObtained: 65 },
+          { date: "Fri", timeSpent: 40, marksObtained: 88 },
+          { date: "Sat", timeSpent: 90, marksObtained: 72 },
+          { date: "Sun", timeSpent: 55, marksObtained: 95 }
+        ]}
+      />
 
       {/* Recent quizzes */}
       <motion.div
