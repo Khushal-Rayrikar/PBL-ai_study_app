@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { useGetDashboard, useAuth } from "../lib/api";
 import { Card } from "../components/ui/card";
 import { Skeleton } from "../components/ui/skeleton";
+import { UnitWiseBreakdown } from "../components/UnitWiseBreakdown";
 import {
   FileText, Trophy, Target, Sparkles, ArrowRight,
   PlayCircle, UploadCloud, Flame, Zap, Star, TrendingUp
@@ -258,11 +259,50 @@ export default function Dashboard() {
         </Card>
       </motion.div>
 
+      {/* Unit-wise Breakdown Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <UnitWiseBreakdown 
+          units={[
+            {
+              id: "1",
+              name: "Unit 1: Fundamentals",
+              progress: 85,
+              topics: 12,
+              strength: "Strong",
+              aiInsight: "Excellent grasp of fundamentals. Ready for advanced topics.",
+              lastpracticed: "today"
+            },
+            {
+              id: "2",
+              name: "Unit 2: Advanced Concepts",
+              progress: 72,
+              topics: 8,
+              strength: "Good",
+              aiInsight: "Good understanding. Focus on complex problem-solving.",
+              lastpracticed: "2 days ago"
+            },
+            {
+              id: "3",
+              name: "Unit 3: Applications",
+              progress: 60,
+              topics: 10,
+              strength: "Needs Work",
+              aiInsight: "Practice more application-based problems to improve.",
+              lastpracticed: "1 week ago"
+            }
+          ]}
+        />
+      </motion.div>
+
       {/* Recent quizzes */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
+        transition={{ delay: 0.25 }}
       >
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-display font-bold text-foreground">Recent Quizzes</h2>
