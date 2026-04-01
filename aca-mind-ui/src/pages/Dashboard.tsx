@@ -3,8 +3,8 @@ import { useGetDashboard, useAuth } from "../lib/api";
 import { Card } from "../components/ui/card";
 import { Skeleton } from "../components/ui/skeleton";
 import {
-  FileText, Trophy, Target, Sparkles, Plus, ArrowRight,
-  PlayCircle, UploadCloud, Flame, Zap, Star, TrendingUp, Award
+  FileText, Trophy, Target, Sparkles, ArrowRight,
+  PlayCircle, UploadCloud, Flame, Zap, Star, TrendingUp
 } from "lucide-react";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
