@@ -1,0 +1,41 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'aca-mind-ui/package-lock.json'
+      
+      - name: Install dependencies
+        working-directory: ./aca-mind-ui
+        run: npm ci
+      
+      - name: Type check
+        working-directory: ./aca-mind-ui
+        run: npx tsc --noEmit
+      
+      - name: Build check
+        working-directory: ./aca-mind-ui
+        run: npm run build
+      
+      - name: Report build size
+        working-directory: ./aca-mind-ui
+        run: |
+          echo "## 📊 Build Size Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          ls -lh dist/assets/ >> $GITHUB_STEP_SUMMARY || true
+          du -sh dist/ | awk '{print "**Total Build Size:** " $1}' >> $GITHUB_STEP_SUMMARY

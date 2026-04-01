@@ -262,6 +262,16 @@ a:hover {
   background: rgba(59, 130, 246, 0.7);
 }
 
+/* Scrollbar Hide Utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Selection */
 ::selection {
   background-color: rgba(59, 130, 246, 0.5);
