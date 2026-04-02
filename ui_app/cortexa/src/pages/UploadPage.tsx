@@ -11,7 +11,7 @@ import { UploadedMaterial, ExamType, AdaptiveAnalysisResult } from "../types/qui
 import { ExamSelector } from "../components/ExamSelector";
 import { AdaptiveQuizResults } from "../components/AdaptiveQuizResults";
 import { extractPdfText, isPdfFile } from "../lib/pdfParser";
-import { submitAdaptiveQuizRequest } from "../lib/api";
+import { analyzeText } from "../lib/analyzeText";
 import { motion } from "framer-motion";
 
 // Sample questions generator based on uploaded content
@@ -150,11 +150,11 @@ export default function UploadPage() {
 
       setUploadProgress(50);
 
-      // Submit to backend for adaptive analysis
+      // Analyze text locally using keyword-based AI
       try {
-        const result = await submitAdaptiveQuizRequest(
-          selectedExam,
+        const result = await analyzeText(
           pdfText,
+          selectedExam,
           selectedFile.name
         );
 
@@ -199,8 +199,8 @@ export default function UploadPage() {
           setSelectedFile(null);
           setUploadProgress(0);
         }, 1500);
-      } catch (apiError) {
-        console.error("API Error:", apiError);
+      } catch (analysisError) {
+        console.error("Analysis Error:", analysisError);
 
         // Fallback to local processing
         setUploadProgress(60);
