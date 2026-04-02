@@ -20,9 +20,12 @@ function App() {
       <section id="center">
         <div className="hero-content">
           <div>
-            <h2>Welcome to cortexa</h2>
-            <p>
-              A modern React + TypeScript application built with Vite
+            <h2>Welcome to Cortexa</h2>
+            <p className="main-tagline">
+              Advanced AI Engine for Document Analysis & Intelligent Study Material Generation
+            </p>
+            <p className="main-description">
+              Transform your learning experience with Cortexa's cutting-edge AI technology
             </p>
           </div>
         </div>

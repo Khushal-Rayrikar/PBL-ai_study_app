@@ -55,6 +55,19 @@
   max-width: 500px;
 }
 
+.main-tagline {
+  font-size: 18px !important;
+  font-weight: 600;
+  color: var(--accent) !important;
+  margin: 12px 0 8px 0 !important;
+}
+
+.main-description {
+  font-size: 14px !important;
+  color: var(--text-secondary) !important;
+  margin: 0 !important;
+}
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;
