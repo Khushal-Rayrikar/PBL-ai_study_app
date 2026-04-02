@@ -488,16 +488,6 @@ export default function UploadPage() {
     </div>
   );
 }
-
-      <Card className={cn(
-        "p-2 rounded-3xl border-2 border-dashed transition-all duration-300 glass-card overflow-hidden relative group",
-        isDragActive ? "border-primary bg-primary/5 shadow-glow" : "border-border hover:border-primary/50 hover:bg-secondary/30",
-        isDragReject && "border-destructive bg-destructive/5"
-      )}>
-        <div 
-          {...getRootProps()} 
-          className="p-12 md:p-20 flex flex-col items-center justify-center text-center cursor-pointer min-h-[400px]"
-        >
           <input {...getInputProps()} />
           
           {!selectedFile ? (
