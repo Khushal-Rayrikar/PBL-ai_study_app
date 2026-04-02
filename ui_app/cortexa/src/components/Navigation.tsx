@@ -20,7 +20,7 @@ export function Navigation() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 font-display font-bold text-xl text-primary hover:text-primary/80 transition-colors shrink-0">
             <span className="text-2xl">🎓</span>
-            <span className="hidden sm:inline">ACA Mind</span>
+            <span className="hidden sm:inline">Cortexa</span>
           </Link>
 
           <div className="flex items-center gap-1 bg-secondary/50 rounded-full p-1 overflow-x-auto scrollbar-hide">
