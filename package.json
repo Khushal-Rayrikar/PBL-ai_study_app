@@ -1,0 +1,14 @@
+{
+  "name": "cortexa-gateway",
+  "version": "1.0.0",
+  "description": "Unified gateway for Cortexa frontend and backend",
+  "main": "gateway-server.js",
+  "scripts": {
+    "start": "node gateway-server.js",
+    "dev": "node gateway-server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6"
+  }
+}
