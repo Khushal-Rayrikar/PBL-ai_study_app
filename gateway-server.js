@@ -22,7 +22,7 @@ if (fs.existsSync(frontendPath)) {
   console.warn('⚠️  Frontend dist folder not found. Build frontend first with: npm run build');
 }
 
-// API proxy - all requests to /api go to backend
+// API proxy - ONLY requests to /api go to backend
 app.use('/api', createProxyMiddleware({
   target: 'http://localhost:8000',
   changeOrigin: true,
@@ -54,7 +54,7 @@ app.get('/health/backend', (req, res) => {
   });
 });
 
-// Serve index.html for client-side routing
+// Serve index.html for client-side routing (AFTER static files and /api)
 app.get('*', (req, res) => {
   const indexPath = path.join(frontendPath, 'index.html');
   if (fs.existsSync(indexPath)) {
