@@ -488,31 +488,6 @@ export default function UploadPage() {
     </div>
   );
 }
-          <input {...getInputProps()} />
-          
-          {!selectedFile ? (
-            <div className="space-y-6">
-              <div className={cn(
-                "w-24 h-24 rounded-full flex items-center justify-center mx-auto transition-all duration-500",
-                isDragActive ? "bg-primary text-white scale-110 shadow-lg shadow-primary/30" : "bg-secondary text-primary"
-              )}>
-                <UploadCloud className="w-10 h-10" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold text-foreground mb-2">
-                  {isDragActive ? "Drop file here to analyze" : "Drag & drop your file"}
-                </h3>
-                <p className="text-muted-foreground">
-                  or click to browse your computer
-                </p>
-              </div>
-              <div className="pt-6 flex items-center justify-center gap-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                <span className="px-3 py-1 rounded-md bg-secondary">PDF</span>
-                <span className="px-3 py-1 rounded-md bg-secondary">TXT</span>
-                <span className="px-3 py-1 rounded-md bg-secondary">DOCX</span>
-              </div>
-            </div>
-          ) : (
             <div className="w-full max-w-md animate-in fade-in zoom-in duration-300" onClick={(e) => e.stopPropagation()}>
               <div className="bg-white rounded-2xl p-6 shadow-float border border-border/50 relative">
                 {!isUploading && (
