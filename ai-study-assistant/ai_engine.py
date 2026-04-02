@@ -1,3 +1,9 @@
+"""
+Cortexa AI Engine v1.0.2
+Advanced document analysis and study material generation
+Part of the Cortexa AI Study Platform
+"""
+
 import os
 from openai import OpenAI
 from typing import Dict, Any

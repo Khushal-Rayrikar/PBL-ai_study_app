@@ -3,9 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 from ai_engine import analyze_document
 
-app = FastAPI(title="AI Study Assistant Backend", version="1.0.0")
+app = FastAPI(title="Cortexa AI Engine", version="1.0.2")
 
-# CORS middleware
+# CORS middleware for Cortexa
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # In production, specify your frontend domains
@@ -13,6 +13,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Cortexa API info
+@app.get("/")
+async def root():
+    """Cortexa AI Engine - Analytics & Study Assistant API"""
+    return {
+        "name": "Cortexa",
+        "version": "1.0.2",
+        "description": "Advanced AI Engine for document analysis and study material generation"
+    }
 
 @app.post("/analyze/")
 async def analyze_file(file: UploadFile = File(...)):
