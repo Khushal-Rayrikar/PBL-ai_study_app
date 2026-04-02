@@ -488,11 +488,6 @@ export default function UploadPage() {
     </div>
   );
 }
-        <h1 className="text-3xl font-display font-bold text-foreground">Upload & Analyze</h1>
-        <p className="text-muted-foreground mt-2 text-lg">
-          Upload your study materials (PDF, TXT, DOCX) and AI will automatically generate custom quizzes
-        </p>
-      </div>
 
       <Card className={cn(
         "p-2 rounded-3xl border-2 border-dashed transition-all duration-300 glass-card overflow-hidden relative group",
