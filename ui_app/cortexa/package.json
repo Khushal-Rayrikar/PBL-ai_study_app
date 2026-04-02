@@ -24,6 +24,7 @@
     "date-fns": "^3.6.0",
     "framer-motion": "^11.2.12",
     "lucide-react": "^0.344.0",
+    "pdfjs-dist": "^4.0.379",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",

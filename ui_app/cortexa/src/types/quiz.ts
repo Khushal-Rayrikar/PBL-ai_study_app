@@ -8,6 +8,26 @@ export interface Question {
   topic?: string;
 }
 
+export type ExamType = 'HSC' | 'JEE' | 'NEET'
+
+export interface TopicFrequency {
+  topic: string
+  frequency: number
+  percentage: number
+  importance: 'High' | 'Medium' | 'Low'
+}
+
+export interface AdaptiveAnalysisResult {
+  exam_type: ExamType
+  pdf_text: string
+  detected_topics: string[]
+  topic_frequencies: TopicFrequency[]
+  personalized_questions: Question[]
+  learning_feedback: string[]
+  summary: string
+  recommendations: string[]
+}
+
 export interface Quiz {
   id: string;
   title: string;
@@ -22,6 +42,7 @@ export interface Quiz {
   sourceFile?: string; // Name of the uploaded file this quiz was generated from
   createdAt: Date;
   tags?: string[];
+  examType?: ExamType;
 }
 
 export interface UploadedMaterial {
@@ -32,6 +53,7 @@ export interface UploadedMaterial {
   content: string;
   generatedQuizzes: string[]; // Quiz IDs
   analysisResult?: string;
+  examType?: ExamType;
 }
 
 export interface QuizStorage {
