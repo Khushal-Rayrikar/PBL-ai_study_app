@@ -20,7 +20,7 @@ timeout /t 3 /nobreak
 
 REM Start Frontend
 echo Starting Cortexa Frontend (React UI)...
-start "Cortexa Frontend" cmd /k "cd ui_app\aca-mind-ui && npm run dev"
+start "Cortexa Frontend" cmd /k "cd ui_app\cortexa && npm run dev"
 echo.
 
 echo ================================

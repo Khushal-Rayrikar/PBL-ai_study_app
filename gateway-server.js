@@ -12,7 +12,7 @@ const app = express();
 const PORT = 3000;
 
 // Serve static frontend files
-const frontendPath = path.join(__dirname, 'ui_app', 'aca-mind-ui', 'dist');
+const frontendPath = path.join(__dirname, 'ui_app', 'cortexa', 'dist');
 
 // Check if frontend is built
 if (fs.existsSync(frontendPath)) {

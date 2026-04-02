@@ -26,7 +26,7 @@ sleep 2
 
 # Start Frontend
 echo -e "${BLUE}Starting Cortexa Frontend (React UI)...${NC}"
-cd ../ui_app/aca-mind-ui
+cd ../ui_app/cortexa
 npm run dev &
 FRONTEND_PID=$!
 echo -e "${GREEN}✓ Frontend started (PID: $FRONTEND_PID)${NC}"
