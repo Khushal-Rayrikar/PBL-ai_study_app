@@ -2,6 +2,47 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "./ui/card";
 import { CheckCircle2, XCircle, Brain, Zap } from "lucide-react";
+import * as pdfjsLib from "pdfjs-dist";
+
+async function analyzePDF(file, exam) {
+  const text = await extractTextFromPDF(file);
+
+  const res = await fetch("http://localhost:3000/api/analyze", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      text: text,
+      exam: exam,
+    }),
+  });
+
+  return await res.json();
+}
+
+async function extractTextFromPDF(file) {
+  const reader = new FileReader();
+
+  return new Promise((resolve) => {
+    reader.onload = async function () {
+      const typedarray = new Uint8Array(this.result);
+
+      const pdf = await pdfjsLib.getDocument(typedarray).promise;
+      let text = "";
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        text += content.items.map(item => item.str).join(" ");
+      }
+
+      resolve(text);
+    };
+
+    reader.readAsArrayBuffer(file);
+  });
+}
 
 interface Question {
   id: string;
@@ -25,6 +66,7 @@ export function AdaptiveQuiz({ questions, onComplete }: AdaptiveQuizProps) {
   const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard">("Easy");
   const [answered, setAnswered] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [output, setOutput] = useState(null);
 
   // Adaptive difficulty logic
   useEffect(() => {
@@ -65,6 +107,11 @@ export function AdaptiveQuiz({ questions, onComplete }: AdaptiveQuizProps) {
     } else {
       onComplete(score, difficulty);
     }
+  };
+
+  const handleAnalyze = async (file: File, selectedExam: string) => {
+    const result = await analyzePDF(file, selectedExam);
+    setOutput(result);
   };
 
   return (
@@ -230,6 +277,23 @@ export function AdaptiveQuiz({ questions, onComplete }: AdaptiveQuizProps) {
           <p className="text-xs">
             Based on your {accuracyPercent}% accuracy, difficulty has been adjusted to {difficulty} level for optimal learning.
           </p>
+        </motion.div>
+      )}
+
+      {/* Analysis Results Output */}
+      {output && (
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-6 rounded-2xl glass-card bg-gradient-to-r from-green-500/5 to-blue-500/5 border border-green-500/20"
+        >
+          <h3 className="text-xl font-bold text-foreground mb-4">📊 Analysis Results</h3>
+          <div className="space-y-4">
+            <div className="p-4 rounded-xl bg-secondary/50">
+              <p className="text-sm font-semibold text-muted-foreground mb-2">Topics Detected:</p>
+              <p className="text-foreground">{JSON.stringify(output, null, 2)}</p>
+            </div>
+          </div>
         </motion.div>
       )}
     </div>
