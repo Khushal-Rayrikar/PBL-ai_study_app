@@ -39,39 +39,33 @@ jobs:
       working-directory: ./ui_app/cortexa
       run: npm run build
 
-    - name: Install Cordova
-      run: npm install -g cordova
-
-    - name: Create Cordova project
-      working-directory: ./ui_app
-      run: cordova create cortexa-app com.acamind.app "Cortexa"
+    - name: Install Capacitor CLI
+      run: npm install -g @capacitor/cli @capacitor/android
 
     - name: Add Android platform
-      working-directory: ./ui_app/cortexa-app
-      run: cordova platform add android
+      working-directory: ./ui_app/cortexa
+      run: npx cap add android
 
-    - name: Copy web assets
-      working-directory: ./ui_app/cortexa-app
-      run: |
-        rm -rf www/*
-        cp -r ../cortexa/dist/* www/
+    - name: Sync web assets
+      working-directory: ./ui_app/cortexa
+      run: npx cap sync android
 
     - name: Build APK
-      working-directory: ./ui_app/cortexa-app
-      run: cordova build android --debug
+      working-directory: ./ui_app/cortexa/android
+      run: ./gradlew assembleDebug
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
         name: cortexa-apk
-        path: ui_app/cortexa-app/platforms/android/app/build/outputs/apk/debug/
+        path: ui_app/cortexa/android/app/build/outputs/apk/debug/
         retention-days: 30
 
     - name: Create Release
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: softprops/action-gh-release@v1
       with:
-        files: ui_app/cortexa-app/platforms/android/app/build/outputs/apk/debug/*.apk
+        files: ui_app/cortexa/android/app/build/outputs/apk/debug/*.apk
         tag_name: v${{ github.run_number }}
         draft: false
         prerelease: false
