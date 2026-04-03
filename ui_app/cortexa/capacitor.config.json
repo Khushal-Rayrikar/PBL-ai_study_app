@@ -1,6 +1,6 @@
 {
   "appId": "com.acamind.app",
-  "appName": "ACA Mind",
+  "appName": "aca-mind-ui",
   "webDir": "dist",
   "server": {
     "androidScheme": "https"

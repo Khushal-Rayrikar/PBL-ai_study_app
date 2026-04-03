@@ -53,7 +53,36 @@ export function AdaptiveQuiz({ questions, onComplete }: AdaptiveQuizProps) {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [output, setOutput] = useState<AdaptiveAnalysisResult | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [selectedExam, setSelectedExam] = useState<ExamType>("HSC");
+  const [selectedExamType, setSelectedExamType] = useState<ExamType>("HSC");
+  const [isAnalyzingDocument, setIsAnalyzingDocument] = useState(false);
+  const [localQuestions, setLocalQuestions] = useState<Question[]>(questions);
+
+  useEffect(() => {
+    setLocalQuestions(questions);
+  }, [questions]);
+
+  const handleFileSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
+    setSelectedFile(file);
+  };
+
+  const handleAnalyzePDF = async () => {
+    if (!selectedFile) return;
+
+    setIsAnalyzingDocument(true);
+    try {
+      const extractedText = await extractTextFromPDF(selectedFile);
+      const analysis = await analyzeText(extractedText, selectedExamType, selectedFile.name);
+      setOutput(analysis);
+      setLocalQuestions(analysis.personalized_questions);
+      setCurrentQuestionIdx(0);
+      setSelectedAnswer(null);
+    } catch (error) {
+      console.error('Error analyzing PDF locally:', error);
+    } finally {
+      setIsAnalyzingDocument(false);
+    }
+  };
 
   // Adaptive difficulty logic
   useEffect(() => {
@@ -72,9 +101,10 @@ export function AdaptiveQuiz({ questions, onComplete }: AdaptiveQuizProps) {
     }
   }, [answered, correctAnswers, difficulty]);
 
-  const currentQuestion = questions[currentQuestionIdx];
-  const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
-  const progress = ((currentQuestionIdx + 1) / questions.length) * 100;
+  const currentQuestions = localQuestions.length > 0 ? localQuestions : questions;
+  const currentQuestion = currentQuestions[currentQuestionIdx];
+  const isCorrect = selectedAnswer === currentQuestion?.correctAnswer;
+  const progress = currentQuestions.length > 0 ? ((currentQuestionIdx + 1) / currentQuestions.length) * 100 : 0;
   const accuracyPercent = answered > 0 ? Math.round((correctAnswers / answered) * 100) : 0;
 
   const handleAnswer = () => {
@@ -98,6 +128,43 @@ export function AdaptiveQuiz({ questions, onComplete }: AdaptiveQuizProps) {
 
   return (
     <div className="space-y-6">
+      {/* Offline PDF Analysis Panel */}
+      <Card className="p-6 rounded-2xl glass-card border border-border bg-secondary/40">
+        <h3 className="text-lg font-bold mb-3">📄 Local PDF Analyzer (Offline)</h3>
+
+        <div className="space-y-3">
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={handleFileSelection}
+            disabled={isAnalyzingDocument}
+            className="w-full text-sm"
+          />
+
+          <div className="flex gap-2 items-center">
+            <label htmlFor="examType" className="text-sm font-medium">Exam</label>
+            <select
+              id="examType"
+              value={selectedExamType}
+              onChange={(e) => setSelectedExamType(e.target.value as ExamType)}
+              className="rounded-md p-2 border border-border"
+            >
+              <option value="HSC">HSC</option>
+              <option value="JEE">JEE</option>
+              <option value="NEET">NEET</option>
+            </select>
+          </div>
+
+          <button
+            onClick={handleAnalyzePDF}
+            disabled={!selectedFile || isAnalyzingDocument}
+            className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition"
+          >
+            {isAnalyzingDocument ? 'Analyzing...' : 'Extract + Analyze PDF'}
+          </button>
+        </div>
+      </Card>
+
       {/* Header with progress */}
       <motion.div
         initial={{ opacity: 0, y: -12 }}
@@ -272,8 +339,46 @@ export function AdaptiveQuiz({ questions, onComplete }: AdaptiveQuizProps) {
           <h3 className="text-xl font-bold text-foreground mb-4">📊 Analysis Results</h3>
           <div className="space-y-4">
             <div className="p-4 rounded-xl bg-secondary/50">
-              <p className="text-sm font-semibold text-muted-foreground mb-2">Topics Detected:</p>
-              <p className="text-foreground">{JSON.stringify(output, null, 2)}</p>
+              <p className="text-sm font-semibold text-muted-foreground mb-2">Detected Topics</p>
+              <ul className="text-foreground list-disc ml-5 space-y-1">
+                {output.detected_topics.map((topic) => (
+                  <li key={topic}>{topic}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="p-4 rounded-xl bg-secondary/50">
+              <p className="text-sm font-semibold text-muted-foreground mb-2">Topic Frequencies</p>
+              <ul className="text-foreground list-disc ml-5 space-y-1">
+                {output.topic_frequencies.map((freq) => (
+                  <li key={freq.topic}>
+                    {freq.topic}: {freq.frequency} occurrences ({freq.percentage.toFixed(2)}%, {freq.importance})
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="p-4 rounded-xl bg-secondary/50">
+              <p className="text-sm font-semibold text-muted-foreground mb-2">Difficulty / Feedback</p>
+              <p className="text-foreground mb-2">Summary: {output.summary}</p>
+              <p className="text-foreground font-semibold mb-1">Learning Feedback:</p>
+              <ul className="text-foreground list-disc ml-5 space-y-1">
+                {output.learning_feedback.map((line, idx) => (
+                  <li key={idx}>{line}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="p-4 rounded-xl bg-secondary/50">
+              <p className="text-sm font-semibold text-muted-foreground mb-2">Generated Questions</p>
+              <ol className="text-foreground list-decimal ml-5 space-y-2">
+                {output.personalized_questions.slice(0, 6).map((q) => (
+                  <li key={q.id}>
+                    <p className="font-semibold">{q.question} (Difficulty: {q.difficulty})</p>
+                    <p className="text-xs text-muted-foreground">{q.explanation}</p>
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
         </motion.div>

@@ -81,7 +81,7 @@ const generateSampleQuestions = (filename: string) => {
 
 export default function UploadPage() {
   const { toast } = useToast();
-  const [selectedExam, setSelectedExam] = useState<ExamType>(null);
+  const [selectedExam, setSelectedExam] = useState<ExamType | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
@@ -483,110 +483,6 @@ export default function UploadPage() {
           <p className="text-muted-foreground">
             No materials uploaded yet. Select an exam and upload your first study material to get started!
           </p>
-        </motion.div>
-      )}
-    </div>
-  );
-}
-            <div className="w-full max-w-md animate-in fade-in zoom-in duration-300" onClick={(e) => e.stopPropagation()}>
-              <div className="bg-white rounded-2xl p-6 shadow-float border border-border/50 relative">
-                {!isUploading && (
-                  <button 
-                    onClick={handleClear}
-                    className="absolute -top-3 -right-3 w-8 h-8 bg-destructive text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-                
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
-                    <File className="w-7 h-7" />
-                  </div>
-                  <div className="text-left overflow-hidden">
-                    <h4 className="font-bold text-foreground truncate">{selectedFile.name}</h4>
-                    <p className="text-sm text-muted-foreground mt-1">{formatBytes(selectedFile.size)}</p>
-                  </div>
-                </div>
-
-                {isUploading ? (
-                  <div className="space-y-3">
-                    <div className="flex justify-between text-sm font-semibold">
-                      <span className="text-primary">Uploading & Analyzing...</span>
-                      <span>{uploadProgress}%</span>
-                    </div>
-                    <Progress value={uploadProgress} className="h-3" />
-                  </div>
-                ) : (
-                  <button
-                    onClick={handleUpload}
-                    className="w-full py-4 rounded-xl font-bold text-white bg-gradient-to-r from-primary to-indigo-500 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
-                  >
-                    <BrainCircuit className="w-5 h-5" />
-                    Analyze with AI
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      </Card>
-
-      {/* Uploaded Materials List */}
-      {materials.length > 0 && (
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-          <h2 className="text-2xl font-bold text-foreground">Uploaded Materials ({materials.length})</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {materials.map((material, idx) => (
-              <motion.div key={material.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }}>
-                <Card className="glass-card p-5 space-y-3 hover:shadow-lg transition-all">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <File className="w-5 h-5 text-primary" />
-                        <h3 className="font-bold text-foreground truncate">{material.filename}</h3>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {new Date(material.uploadedAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <span className="px-2 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
-                      {material.filetype.toUpperCase()}
-                    </span>
-                  </div>
-
-                  <div className="pt-2 border-t border-border space-y-2">
-                    <div className="text-sm text-muted-foreground">
-                      {material.analysisResult}
-                    </div>
-                    
-                    <div className="flex items-center gap-2 text-sm text-green-600 font-semibold">
-                      <CheckCircle2 className="w-4 h-4" />
-                      {material.generatedQuizzes.length} quiz generated
-                    </div>
-
-                    <div className="flex gap-2 pt-2">
-                      <Link href="/quizzes" className="flex-1 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold text-center hover:shadow-lg transition-all">
-                        View Quiz
-                      </Link>
-                      <button
-                        onClick={() => handleDeleteMaterial(material.id)}
-                        className="px-3 py-2 rounded-lg bg-destructive/10 text-destructive font-semibold hover:bg-destructive/20 transition-all flex items-center justify-center gap-1"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      )}
-
-      {materials.length === 0 && !selectedFile && (
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="text-center py-12">
-          <p className="text-muted-foreground">No materials uploaded yet. Upload your first study material to get started!</p>
         </motion.div>
       )}
     </div>
