@@ -22,14 +22,14 @@ jobs:
     - name: Setup Java
       uses: actions/setup-java@v4
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
-        api-levels: '36'
-        build-tools-version: '36.0.0'
+        api-levels: '34'
+        build-tools-version: '34.0.0'
 
     - name: Install dependencies (Frontend)
       working-directory: ./ui_app/cortexa
