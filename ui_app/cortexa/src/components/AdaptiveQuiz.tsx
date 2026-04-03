@@ -3,30 +3,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "./ui/card";
 import { CheckCircle2, XCircle, Brain, Zap } from "lucide-react";
 import * as pdfjsLib from "pdfjs-dist";
+import { analyzeText } from "../lib/analyzeText";
+import { ExamType, AdaptiveAnalysisResult } from "../types/quiz";
 
-async function analyzePDF(file, exam) {
-  const text = await extractTextFromPDF(file);
-
-  const res = await fetch("http://localhost:3000/api/analyze", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      text: text,
-      exam: exam,
-    }),
-  });
-
-  return await res.json();
-}
-
-async function extractTextFromPDF(file) {
+async function extractTextFromPDF(file: File): Promise<string> {
   const reader = new FileReader();
 
   return new Promise((resolve) => {
     reader.onload = async function () {
-      const typedarray = new Uint8Array(this.result);
+      const typedarray = new Uint8Array(this.result as ArrayBuffer);
 
       const pdf = await pdfjsLib.getDocument(typedarray).promise;
       let text = "";
@@ -34,7 +19,7 @@ async function extractTextFromPDF(file) {
       for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const content = await page.getTextContent();
-        text += content.items.map(item => item.str).join(" ");
+        text += content.items.map((item: any) => item.str).join(" ");
       }
 
       resolve(text);
@@ -66,7 +51,9 @@ export function AdaptiveQuiz({ questions, onComplete }: AdaptiveQuizProps) {
   const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard">("Easy");
   const [answered, setAnswered] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
-  const [output, setOutput] = useState(null);
+  const [output, setOutput] = useState<AdaptiveAnalysisResult | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedExam, setSelectedExam] = useState<ExamType>("HSC");
 
   // Adaptive difficulty logic
   useEffect(() => {
@@ -107,11 +94,6 @@ export function AdaptiveQuiz({ questions, onComplete }: AdaptiveQuizProps) {
     } else {
       onComplete(score, difficulty);
     }
-  };
-
-  const handleAnalyze = async (file: File, selectedExam: string) => {
-    const result = await analyzePDF(file, selectedExam);
-    setOutput(result);
   };
 
   return (
