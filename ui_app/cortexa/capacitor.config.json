@@ -1,6 +1,6 @@
 {
   "appId": "com.acamind.app",
-  "appName": "ACA Mind",
+  "appName": "Cortexa",
   "webDir": "dist",
   "server": {
     "androidScheme": "https"
