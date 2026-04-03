@@ -1,0 +1,79 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        api-levels: '36'
+        build-tools-version: '36.0.0'
+
+    - name: Install dependencies (Frontend)
+      working-directory: ./ui_app/cortexa
+      run: npm install
+
+    - name: Build frontend
+      working-directory: ./ui_app/cortexa
+      run: npm run build
+
+    - name: Install Cordova
+      run: npm install -g cordova
+
+    - name: Create Cordova project
+      working-directory: ./ui_app
+      run: cordova create cortexa-app com.acamind.app "Cortexa"
+
+    - name: Add Android platform
+      working-directory: ./ui_app/cortexa-app
+      run: cordova platform add android
+
+    - name: Copy web assets
+      working-directory: ./ui_app/cortexa-app
+      run: |
+        rm -rf www/*
+        cp -r ../cortexa/dist/* www/
+
+    - name: Build APK
+      working-directory: ./ui_app/cortexa-app
+      run: cordova build android --release
+
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: cortexa-apk
+        path: ui_app/cortexa-app/platforms/android/app/build/outputs/apk/release/
+        retention-days: 30
+
+    - name: Create Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ui_app/cortexa-app/platforms/android/app/build/outputs/apk/release/*.apk
+        tag_name: v${{ github.run_number }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
